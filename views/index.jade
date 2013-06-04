@@ -1,0 +1,58 @@
+h1 Gra kółko i krzyżyk
+div(style="width:100%; height:100%; border:1px dashed #000; min-height: 50px;overflow:hidden;margin:auto;", id="zone")
+   span(style="float:left")
+   h1(id='stats')
+	span (id="turn")
+	
+  span(style="float:right")
+    h1(id='p1') Oczekiwanie na gracza...
+    h1(id='p2') Oczekiwanie na gracza...
+p &nbsp;
+table(width='100%', border='2')
+  tr
+    td(width='33%',id='0-0')
+    td(width='33%',id='0-1')
+    td(width='33%',id='0-2')
+  tr
+    td(width='33%',id='1-0') 
+    td(width='33%', id='1-1')
+    td(width='33%', id='1-2') 
+  tr
+    td(width='33%', id='2-0')
+    td(width='33%', id='2-1')
+    td(width='33%', id='2-2')	
+	
+	
+	
+	socket.on('mark', function(sq)
+  {
+      sq = '#' + sq;
+      if($(sq).html() == '')
+      {
+        if( xo == 'x')
+        {
+          $(sq).html('X');
+          xo = 'o';
+          $(sq).css('color','red');
+        }
+        else
+        {
+          $(sq).html('O');
+          $(sq).css('color','blue');
+          xo = 'x';
+        }  
+     }
+  });
+  
+  
+   socket.on('connect_1', function(data){
+    player.id = data.id;
+    player.name = data.name;
+    player.mark = data.mark;
+
+  });
+  
+  socket.on('gameover', function(data){
+    gameover = true;
+    $("#stats").html("Gra zakończona!").hide().fadeIn(1000);
+  });

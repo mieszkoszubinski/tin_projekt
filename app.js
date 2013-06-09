@@ -8,15 +8,25 @@ var io = require('socket.io);
 var app = module.exports = express.createServer();
 
 var io = io.listen(app);
-
 // Konfiguracja
 
-
-
-
+io.set('log level', 1); // wyłaczenie polling'g
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+});
 
 // Ścieżki ruchu
+app.get('/', function(req, res){
+  res.render('index');
+});
 
+app.listen(3000);
+console.log("Serwer gry Kolko i Krzyzyk zostal uruchomiony na porcie %d %s ", app.address().port, app.settings.env);
 
 var xo = 'x'; // Zmiana na to co jest dostępne
 var o = false;

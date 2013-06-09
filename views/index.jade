@@ -27,7 +27,31 @@ script
   var gameover = false;
   var startGame = false;
   
-	
+  function mark(cords)
+  {
+	if(startGame)
+	{
+		if(player.mark != xo)
+		{
+			$(#stats").html('Poczekaj! Nie Twoja tura!').hide().fadeIn(1000).fadeOut(1000);
+		}
+		else
+		{
+		  if($(cords).html() == '')
+		  {
+			socket.emit("process_move", cords);
+		  }
+		  else
+		  {
+		    $("#stats").html('Nieprawidłowy ruch!').hide().fadeIn(1000).fadeOut(1000);
+		  }
+		}
+	}
+	else
+	{
+       $("stats".html('Oczekujący dodatkowy gracz...').hide().fadeIn(1000).fadeOut(1000);
+	}
+  }
 	socket.on('mark', function(sq)
 	{
       sq = '#' + sq;

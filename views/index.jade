@@ -1,9 +1,9 @@
 h1 Gra kółko i krzyżyk
-div(style="width:100%; height:100%; border:1px dashed #000; min-height: 50px;overflow:hidden;margin:auto;", id="zone")
-   span(style="float:left")
-   h1(id='stats')
-	span (id="turn")
-	
+div(style="width:100%;height:100%; border:1px dashed #000;min-height: 50px;overflow:hidden;margin:auto;", id="zone")
+  span(style="float:left")
+    h1(id='stats')
+      span(id="turn")
+  
   span(style="float:right")
     h1(id='p1') Oczekiwanie na gracza...
     h1(id='p2') Oczekiwanie na gracza...
@@ -20,7 +20,7 @@ table(width='100%', border='2')
   tr
     td(width='33%', id='2-0')
     td(width='33%', id='2-1')
-    td(width='33%', id='2-2')	
+    td(width='33%', id='2-2')
 
 script
   var xo = 'x';
@@ -29,31 +29,32 @@ script
   
   function mark(cords)
   {
-	if(startGame)
-	{
-		if(player.mark != xo)
-		{
-			$(#stats").html('Poczekaj! Nie Twoja tura!').hide().fadeIn(1000).fadeOut(1000);
-		}
-		else
-		{
-		  if($(cords).html() == '')
-		  {
-			socket.emit("process_move", cords);
-		  }
-		  else
-		  {
-		    $("#stats").html('Nieprawidłowy ruch!').hide().fadeIn(1000).fadeOut(1000);
-		  }
-		}
-	}
-	else
-	{
-       $("stats".html('Oczekujący dodatkowy gracz...').hide().fadeIn(1000).fadeOut(1000);
-	}
+    if(startGame)
+    {
+      if(player.mark != xo)
+      {
+         $("#stats").html('Poczekaj! Nie twora tura!').hide().fadeIn(1000).fadeOut(1000);
+      }
+      else
+      {
+        if($(cords).html() == '')
+        {
+          socket.emit("process_move", cords);
+        }
+        else
+        {
+          $("#stats").html('Nieprawidłowy ruch').hide().fadeIn(1000).fadeOut(1000);
+        }
+      }
+    }
+    else
+    {
+      $("#stats").html('Oczekujący dodatkowy gracz..').hide().fadeIn(1000).fadeOut(1000);
+    }
   }
-	socket.on('mark', function(sq)
-	{
+  
+  socket.on('mark', function(sq)
+  {
       sq = '#' + sq;
       if($(sq).html() == '')
       {
@@ -72,8 +73,73 @@ script
      }
   });
   
+  $('#0-0').click(function()
+  {
+    mark("#0-0");
+  });
+  $('#0-1').click(function()
+  {
+    mark("#0-1");
+  });
+  $('#0-2').click(function()
+  {
+    mark("#0-2");
+  });
+  // Drugi rzad
+  $('#1-0').click(function()
+  {
+    mark("#1-0");
+  });
+  $('#1-1').click(function()
+  {
+    mark("#1-1");
+  });
+  $('#1-2').click(function()
+  {
+    mark("#1-2");
+  });
+  // Trzeci rzad
+  $('#2-0').click(function()
+  {
+    mark("#2-0");
+  });
+  $('#2-1').click(function()
+  {
+    mark("#2-1");
+  });
+  $('#2-2').click(function()
+  {
+    mark("#2-2");
+  });
   
-   socket.on('connect_1', function(data){
+  socket.on('load', function(data)
+  {
+     var x = 0;
+     var showedX, showedO = false;
+     console.log(data);
+     while( x < data.length )
+     {
+       if(data[x].mark == 'x')
+       {
+         $("#p1").html(data[x].name + ": <span style='color:red'>X</span>");
+         showedX = true;
+       }
+       else if(data[x].mark == 'o')
+       {
+         $("#p2").html(data[x].name + ": <span style='color:blue'>O</span>");
+         showedO = true;
+       }
+       x++;
+     }
+     
+     if(!showedX) $("#p1").html("Oczekiwanie na pierwszego gracza...");
+     if(!showedO) $("#p2").html("Oczekiwanie na drugiego gracza...");
+     
+     if(showedX && showedO) startGame = true;
+     
+  });
+  
+  socket.on('connect_1', function(data){
     player.id = data.id;
     player.name = data.name;
     player.mark = data.mark;

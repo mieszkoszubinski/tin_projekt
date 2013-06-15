@@ -71,7 +71,7 @@ io.sockets.on('connection', function(socket)
 	 
 	 socket.emit('connect_1', player);
 	 // socket.emit('draw_board', board);
-	 io.sockets.emit('load', p_players);
+	 io.sockets.emit('load',m_players)
 	});
 	
  socket.on('process_move', function(coords)
